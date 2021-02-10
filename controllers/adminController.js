@@ -42,9 +42,9 @@ exports.postEditProduct = (req, res) =>{
     const updateTitle = req.body.title;
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
-    const updatedDescription = req.body.description;
+    const updatedDescription = req.body.description;//изизменение в коде бд
     
-    const updatedProduct = new Product(productId, updateTitle, updatedPrice, updatedImageUrl, updatedDescription);
+    const updatedProduct = new Product(productId, updateTitle, updatedImageUrl, updatedPrice, updatedDescription);
     updatedProduct.save();
     res.redirect('/admin/products');
 }

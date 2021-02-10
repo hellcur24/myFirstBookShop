@@ -1,6 +1,6 @@
 //controller for all product - related logics
 const Product = require('../models/product');
-
+const Cart = require('../models/cart');
 
 
 
@@ -27,4 +27,32 @@ exports.getProduct = (req,res) =>{
 
     });
 
+};
+
+exports.getCart = (req,res)=>{
+    Cart.getCart(cart =>{
+        Product.fetchAll(products =>{
+            const cartProducts = [];
+            for(product of products){
+                const cartProductData = cart.products.find(cartProduct => cartProduct.id === product.id);
+                if(cartProductData){
+                    cartProducts.push({productData: product, qty: cartProductData.qty});
+                }
+            }
+            res.render('shop/cart.ejs', {
+                path: '/cart',
+                pageTitle: 'Your cart',
+                products: cartProducts
+            });
+        });
+    });
+};
+
+exports.postCart = (req, res) => {
+    const productId = req.body.productId;
+    Product.findById(productId, (product) =>{
+        Cart.addProduct(productId, product.price);
+        res.redirect('/cart');
+    });
+    
 }
