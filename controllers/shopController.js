@@ -1,42 +1,35 @@
-//controller for all product - related logics
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 
-
-
-exports.getProducts = (req, res) =>{
-    Product.fetchAll(products =>{
+exports.getProducts = (req, res)=> {
+    Product.fetchAll(products => {
         res.render('shop/product-list.ejs', {
         products: products,
         pageTitle: 'All Products',
         path: '/products'
-        });
+        }); 
     });
 };
 
-exports.getProduct = (req,res) =>{
+exports.getProduct = (req, res) => {
     const productId = req.params.productId;
-    Product.findById(productId, product =>{
-        console.log(product);
-        console.log(req.params.productId);
+    Product.findById(productId, product => {
         res.render('shop/product-detail.ejs', {
             product: product,
             pageTitle: product.title,
             path: '/products'
         });
-
-    });
-
+    });  
 };
 
-exports.getCart = (req,res)=>{
-    Cart.getCart(cart =>{
-        Product.fetchAll(products =>{
+exports.getCart = (req, res) => {
+    Cart.getCart(cart => {
+        Product.fetchAll(products => {
             const cartProducts = [];
             for(product of products){
                 const cartProductData = cart.products.find(cartProduct => cartProduct.id === product.id);
-                if(cartProductData){
-                    cartProducts.push({productData: product, qty: cartProductData.qty});
+                if(cartProductData) {
+                    cartProducts.push({productData: product, qty: cartProductData.qty });
                 }
             }
             res.render('shop/cart.ejs', {
@@ -46,13 +39,12 @@ exports.getCart = (req,res)=>{
             });
         });
     });
-};
+}
 
 exports.postCart = (req, res) => {
     const productId = req.body.productId;
-    Product.findById(productId, (product) =>{
+    Product.findById(productId, (product) => {
         Cart.addProduct(productId, product.price);
         res.redirect('/cart');
-    });
-    
+    });   
 }
